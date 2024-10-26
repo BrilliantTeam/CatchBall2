@@ -19,13 +19,14 @@ public class Ball {
 
         ItemMeta meta = catchball.getItemMeta();
         meta.setDisplayName(ConfigSetting.toChat(TranslationFileReader.catchBallName, "", ""));
-        meta.addEnchant(Enchantment.SOUL_SPEED, 1, true);
-        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        //meta.addEnchant(Enchantment.SOUL_SPEED, 1, true);
+        //meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
 
         meta.setLore(TranslationFileReader.catchBallLore.stream().map(lore -> ChatColor.
                         translateAlternateColorCodes('&', lore)).
                 collect(Collectors.toList()));
 
+        eta.setCustomModelData(10000); // Brilliant Change
         catchball.setItemMeta(meta);
 
         return catchball;
