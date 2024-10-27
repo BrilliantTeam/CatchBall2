@@ -26,7 +26,7 @@ public class Ball {
                         translateAlternateColorCodes('&', lore)).
                 collect(Collectors.toList()));
 
-        eta.setCustomModelData(10000); // Brilliant Change
+        meta.setCustomModelData(10000); // Brilliant Change
         catchball.setItemMeta(meta);
 
         return catchball;

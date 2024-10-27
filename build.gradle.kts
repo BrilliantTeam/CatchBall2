@@ -10,7 +10,7 @@ plugins {
 group = "com.github.nutt1101"
 version = "2.0.1"
 description = "CatchBall"
-java.sourceCompatibility = JavaVersion.VERSION_16
+java.sourceCompatibility = JavaVersion.VERSION_21
 
 repositories {
     mavenLocal()
@@ -64,14 +64,14 @@ dependencies {
     compileOnly("com.sk89q.worldguard:worldguard-bukkit:7.0.10")
     compileOnly("com.github.TechFortress:GriefPrevention:17.0.0")
     compileOnly("com.github.angeschossen:LandsAPI:7.8.5")
-    compileOnly("com.github.Xyness:SimpleClaimSystem:1.10.0.4")
     compileOnly("me.clip:placeholderapi:2.11.6")
     compileOnly ("io.github.fabiozumbi12.RedProtect:RedProtect-Core:8.1.2"){ exclude(group = "*")} // Core is not needed but allow access to all region methods
     compileOnly ("io.github.fabiozumbi12.RedProtect:RedProtect-Spigot:8.1.2"){ exclude(group = "*")}
+    compileOnly(files("./libs/SimpleClaimSystem-1.11.6.1.jar"))
     compileOnly(files("./libs/Residence5.1.4.3.jar"))
 }
 
-val targetJavaVersion = 16
+val targetJavaVersion = 21
 
 tasks.withType<JavaCompile>().configureEach {
     if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible) {
