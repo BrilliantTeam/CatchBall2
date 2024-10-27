@@ -3,7 +3,7 @@ plugins {
     `java-library`
     `maven-publish`
     kotlin("jvm") version "1.8.0"
-    id("com.github.johnrengelman.shadow") version "8.1.1"
+    id("com.gradleup.shadow") version "8.3.3"
     id("xyz.jpenilla.run-paper") version "2.2.4"
 }
 
@@ -39,10 +39,6 @@ repositories {
     }
 
     maven {
-        url = uri("https://repo.jeff-media.com/public/")
-    }
-
-    maven {
         url = uri("https://repo.codemc.io/repository/maven-public/")
     }
 
@@ -56,7 +52,6 @@ repositories {
 
 dependencies {
     api("org.bstats:bstats-bukkit:3.0.3")
-    api("com.github.Paulem79:Spigot-UpdateChecker:3cfb265fb8")
     api("de.tr7zw:item-nbt-api:2.13.3-SNAPSHOT")
     api("cn.handyplus.lib.adapter:FoliaLib:1.1.5")
     compileOnly("org.spigotmc:spigot-api:1.20.5-R0.1-SNAPSHOT")
