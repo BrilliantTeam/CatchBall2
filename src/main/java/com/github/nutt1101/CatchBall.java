@@ -33,6 +33,12 @@ public class CatchBall extends JavaPlugin {
         registerEvent();
         registerCommand();
 
+        new UpdateChecker(this, UpdateCheckSource.HANGAR, "Maoyue_OUO/CatchBall/Release")
+                .checkEveryXHours(1) // Check every hour
+                .setDownloadLink("https://hangar.papermc.io/Maoyue_OUO/CatchBall/versions")
+                .setChangelogLink("https://hangar.papermc.io/Maoyue_OUO/CatchBall/versions")
+                .checkNow(); // And check right now
+
         checkPluginHook("Residence");
         checkPluginHook("MythicMobs");
         checkPluginHook("GriefPrevention");
