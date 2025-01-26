@@ -24,7 +24,6 @@ import me.ryanhamshire.GriefPrevention.ClaimPermission;
 public class ConfigSetting {
     private final static Plugin plugin = CatchBall.plugin;
     public static String locale;
-    public static boolean updatecheck;
     public static List<EntityType> catchableEntity = new ArrayList<>();
     public static boolean chickenDropGoldEgg;
     public static int chickenDropGoldEggChance;
@@ -67,8 +66,6 @@ public class ConfigSetting {
         entityFileCreate();
 
         chickenDropGoldEgg = !config.isSet("ChickenDropGoldEgg") || config.getBoolean("ChickenDropGoldEgg");
-
-        updatecheck = !config.isSet("Update-Check") || config.getBoolean("Update-Check");
 
         entityFile = YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder(), "entity.yml"));
 
