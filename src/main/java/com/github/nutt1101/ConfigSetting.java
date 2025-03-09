@@ -185,6 +185,8 @@ public class ConfigSetting {
         File file = new File(plugin.getDataFolder(), "entity.yml");
         InputStream inputStream = plugin.getResource("entity/" + locale + ".yml");
 
+        if (file.exists()) return;
+
         if (inputStream != null) {
             try {
                 FileOutputStream outputStream = new FileOutputStream(file);
