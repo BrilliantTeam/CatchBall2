@@ -69,7 +69,7 @@ public class SkullClick implements Listener {
                 ClaimedResidence residence = ResidenceApi.getResidenceManager().getByLoc(location);
                 boolean bypassPermissions = false;
 
-                if (residence != null && !residence.getOwnerUUID().equals(player.getUniqueId()) && !player.isOp() && !player.hasPermission("catchball.op")) {
+                if (residence != null && !player.isOp() && !player.hasPermission("catchball.op")) {
                     String[] requiredFlags = {"animals", "canimals", "monsters", "cmonsters"};
                     List<String> missingFlags = new ArrayList<>();
                     for (String flag : requiredFlags) {
