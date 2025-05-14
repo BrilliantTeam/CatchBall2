@@ -59,8 +59,8 @@ public class SkullClick implements Listener{
                         EntityType entityType = EntityType.valueOf(data.get(new NamespacedKey(plugin, "entityType"), PersistentDataType.STRING));
                         Location clickLocation = event.getClickedBlock().getLocation();
 
-                        clickLocation.setX(clickLocation.getBlockX() + 0.5);
-                        clickLocation.setZ(clickLocation.getBlockZ() + 0.5);
+                        //clickLocation.setX(clickLocation.getBlockX() + 0.5);
+                        //clickLocation.setZ(clickLocation.getBlockZ() + 0.5);
                         
                         for (int i=0; i < 3; i++) {
                             if (clickLocation.getBlock().getType().equals(Material.AIR) || clickLocation.getBlock().getType().equals(Material.WATER)) { break; }
@@ -75,8 +75,12 @@ public class SkullClick implements Listener{
 
                         Entity entity = player.getWorld().spawnEntity(clickLocation, entityType);
 
+                        Location location = clickLocation.clone();
+                        location.setX(location.getBlockX() + 0.5);
+                        location.setZ(location.getBlockZ() + 0.5);
+
                         NBTHandler.loadEntityNBT(plugin, entity, data);
-                        PlayerSchedulerUtil.teleport(entity, clickLocation);
+                        PlayerSchedulerUtil.teleport(entity, location);
                         
                         event.getItem().setAmount(0);
                     } catch (Exception e) {

@@ -2,7 +2,6 @@ plugins {
     java
     `java-library`
     `maven-publish`
-    kotlin("jvm") version "1.8.0"
     id("com.gradleup.shadow") version "8.3.3"
     id("xyz.jpenilla.run-paper") version "2.2.4"
 }
@@ -62,16 +61,12 @@ dependencies {
     compileOnly("me.clip:placeholderapi:2.11.6")
     compileOnly ("io.github.fabiozumbi12.RedProtect:RedProtect-Core:8.1.2"){ exclude(group = "*")} // Core is not needed but allow access to all region methods
     compileOnly ("io.github.fabiozumbi12.RedProtect:RedProtect-Spigot:8.1.2"){ exclude(group = "*")}
-    compileOnly(files("./libs/SimpleClaimSystem-1.11.6.1.jar"))
-    compileOnly(files("./libs/Residence5.1.4.3.jar"))
+    compileOnly(files("./libs/SimpleClaimSystem.jar"))
+    compileOnly(files("./libs/Residence5.1.6.5.jar"))
 }
 
-val targetJavaVersion = 21
-
 tasks.withType<JavaCompile>().configureEach {
-    if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible) {
-        options.release.set(targetJavaVersion)
-    }
+    options.release.set(21)
 }
 
 tasks.processResources {
@@ -98,6 +93,15 @@ tasks {
 
         relocate("com.jeff_media.updatechecker", "org.milkteamc.autotreechop.libs.updatechecker")
 
+    }
+
+    java {
+        toolchain.languageVersion.set(JavaLanguageVersion.of(21))
+    }
+
+    compileJava {
+        options.encoding = Charsets.UTF_8.name()
+        options.release.set(21)
     }
 }
 
