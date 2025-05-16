@@ -99,11 +99,10 @@ public class SkullClick implements Listener {
                             return;
                         }
                     } else {
-                        bypassPermissions = true; // All required flags are present
+                        bypassPermissions = true;
                     }
                 }
 
-                // Proceed with spawning if permissions are bypassed
                 if (bypassPermissions) {
                     try {
                         EntityType entityType = EntityType.valueOf(data.get(new NamespacedKey(plugin, "entityType"), PersistentDataType.STRING));
