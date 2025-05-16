@@ -69,7 +69,9 @@ public class SkullClick implements Listener {
                 ClaimedResidence residence = ResidenceApi.getResidenceManager().getByLoc(location);
                 boolean bypassPermissions = false;
 
-                if (residence != null && !player.isOp() && !player.hasPermission("catchball.op")) {
+                if (residence == null || player.isOp() || player.hasPermission("catchball.op")) {
+                    bypassPermissions = true;
+                } else {
                     String[] requiredFlags = {"animals", "canimals", "monsters", "cmonsters"};
                     List<String> missingFlags = new ArrayList<>();
                     for (String flag : requiredFlags) {
@@ -96,10 +98,13 @@ public class SkullClick implements Listener {
                             event.setCancelled(true);
                             return;
                         }
+                    } else {
+                        bypassPermissions = true; // All required flags are present
                     }
                 }
 
-                if (bypassPermissions || residence == null || residence.getOwnerUUID().equals(player.getUniqueId()) || player.isOp() || player.hasPermission("catchball.op")) {
+                // Proceed with spawning if permissions are bypassed
+                if (bypassPermissions) {
                     try {
                         EntityType entityType = EntityType.valueOf(data.get(new NamespacedKey(plugin, "entityType"), PersistentDataType.STRING));
                         Location clickLocation = event.getClickedBlock().getLocation();
