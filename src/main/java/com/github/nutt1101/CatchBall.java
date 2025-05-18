@@ -17,6 +17,7 @@ import com.github.nutt1101.event.HitEvent;
 import com.github.nutt1101.event.DropGoldEgg;
 import com.github.nutt1101.event.SkullClick;
 import com.github.nutt1101.event.GUIClick;
+import com.github.nutt1101.event.ThrowBallEvent;
 import com.github.nutt1101.command.Command;
 import com.github.nutt1101.command.TabComplete;
 
@@ -86,6 +87,7 @@ public class CatchBall extends JavaPlugin {
         registerEvent.registerEvents(new DropGoldEgg(), this);
         registerEvent.registerEvents(new SkullClick(), this);
         registerEvent.registerEvents(new GUIClick(), this);
+        registerEvent.registerEvents(new ThrowBallEvent(), this);
     }
 
     public void registerCommand() {
