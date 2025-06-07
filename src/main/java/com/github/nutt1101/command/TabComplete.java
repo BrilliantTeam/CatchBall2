@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
-
 import com.github.nutt1101.ConfigSetting;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -34,10 +33,10 @@ public class TabComplete implements TabCompleter {
             if (args.length == 2) { 
                 entityList.clear();
                 if (args[0].equalsIgnoreCase("give")) {
-                    Bukkit.getOnlinePlayers().forEach(player -> {
-                        sort.add(player.getName());
-                    });
-                    StringUtil.copyPartialMatches(args[0], sort, sort);
+                    List<String> playerNames = new ArrayList<>();
+                    Bukkit.getOnlinePlayers().forEach(player -> playerNames.add(player.getName()));
+                    StringUtil.copyPartialMatches(args[1], playerNames, sort);
+                    sort.sort(String.CASE_INSENSITIVE_ORDER);
                     return sort;
                 } else if (args[0].equalsIgnoreCase("add")) {
                     Set<String> allEntityList = ConfigSetting.entityFile.getConfigurationSection("EntityList").getKeys(false);

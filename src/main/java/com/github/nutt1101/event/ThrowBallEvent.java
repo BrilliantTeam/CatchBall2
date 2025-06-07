@@ -4,18 +4,34 @@ import com.github.nutt1101.ConfigSetting;
 import com.github.nutt1101.items.Ball;
 import com.github.nutt1101.utils.TranslationFileReader;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Snowball;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
-public class ThrowBallEvent implements Listener {
+import java.util.Set;
 
-    private boolean handleBallThrow(Player player, ItemStack item) {
+public class ThrowBallEvent implements Listener {
+    private static final Set<EntityType> INTERACTABLE_ENTITIES = Set.of(
+        EntityType.VILLAGER,
+        EntityType.WOLF,
+        EntityType.CAT,
+        EntityType.HORSE,
+        EntityType.DONKEY,
+        EntityType.MULE,
+        EntityType.LLAMA,
+        EntityType.TRADER_LLAMA,
+        EntityType.PARROT,
+        EntityType.WANDERING_TRADER,
+        EntityType.CAMEL
+    );
+
+    private boolean handleBallThrow(Player player, ItemStack item, EntityType entityType) {
         if (item == null || !item.hasItemMeta() || 
             !item.getItemMeta().equals(Ball.makeBall().getItemMeta())) {
             return false;
@@ -28,35 +44,26 @@ public class ThrowBallEvent implements Listener {
             return false;
         }
 
-        Snowball snowball = player.launchProjectile(Snowball.class);
-        snowball.setItem(Ball.makeBall());
+        if (INTERACTABLE_ENTITIES.contains(entityType)) {
+            Snowball snowball = player.launchProjectile(Snowball.class);
+            snowball.setItem(Ball.makeBall());
+            item.setAmount(item.getAmount() - 1);
+        }
 
-        item.setAmount(item.getAmount() - 1);
         return true;
     }
 
-    //方塊交互的處理，非必要，所以註解。
-    //@EventHandler(priority = EventPriority.HIGHEST)
-    //public void onPlayerThrowBall(PlayerInteractEvent event) {
-    //    if (event.getAction() != org.bukkit.event.block.Action.RIGHT_CLICK_AIR && 
-    //        event.getAction() != org.bukkit.event.block.Action.RIGHT_CLICK_BLOCK) {
-    //        return;
-    //    }
-
-    //    Player player = event.getPlayer();
-    //    ItemStack item = player.getInventory().getItemInMainHand();
-
-    //    if (handleBallThrow(player, item)) {
-    //        event.setCancelled(true);
-    //    }
-    //}
-
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
+        if (event.getRightClicked() instanceof ItemFrame) {
+            return;
+        }
+
         Player player = event.getPlayer();
         ItemStack item = player.getInventory().getItemInMainHand();
+        EntityType entityType = event.getRightClicked().getType();
 
-        if (handleBallThrow(player, item)) {
+        if (handleBallThrow(player, item, entityType)) {
             event.setCancelled(true);
         }
     }
