@@ -3,7 +3,6 @@ package com.github.nutt1101.utils;
 import de.tr7zw.changeme.nbtapi.NBTContainer;
 import de.tr7zw.changeme.nbtapi.NBTEntity;
 import org.bukkit.NamespacedKey;
-import org.bukkit.entity.Ageable;
 import org.bukkit.entity.Entity;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
@@ -14,7 +13,6 @@ public class NBTHandler {
 
     public static ItemMeta saveEntityNBT(Plugin plugin, Entity hitEntity, ItemMeta headMeta) {
         NBTEntity nbtEntity = new NBTEntity(hitEntity);
-
         String nbtData = nbtEntity.toString();
 
         headMeta.getPersistentDataContainer().set(
@@ -37,21 +35,20 @@ public class NBTHandler {
             String nbtString = data.get(new NamespacedKey(plugin, "entity"), PersistentDataType.STRING);
             if (nbtString != null) {
                 NBTContainer nbtContainer = new NBTContainer(nbtString);
+                
+                nbtContainer.removeKey("Pos");
+                nbtContainer.removeKey("Motion");
+                nbtContainer.removeKey("Rotation");
+                nbtContainer.removeKey("FallDistance");
+                nbtContainer.removeKey("OnGround");
+                
                 NBTEntity nbtEntity = new NBTEntity(entity);
                 nbtEntity.mergeCompound(nbtContainer);
-
-                if (entity instanceof Ageable ageableEntity) {
-                    if (!nbtContainer.hasTag("IsBaby") || !nbtContainer.getBoolean("IsBaby"))
-                        ageableEntity.setAdult();
-                    else
-                        ageableEntity.setBaby();
-                }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
     public static String isCustomEntity(Entity hitEntity) {
         NBTEntity nbtEntity = new NBTEntity(hitEntity);
         return nbtEntity.getString("Paper.SpawnReason");

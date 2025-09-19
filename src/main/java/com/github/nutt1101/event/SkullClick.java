@@ -125,7 +125,6 @@ public class SkullClick implements Listener {
                         Entity entity = player.getWorld().spawnEntity(clickLocation, entityType);
 
                         NBTHandler.loadEntityNBT(plugin, entity, data);
-                        PlayerSchedulerUtil.teleport(entity, clickLocation);
 
                         event.getItem().setAmount(0);
                     } catch (Exception e) {
