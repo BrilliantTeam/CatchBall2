@@ -2,6 +2,7 @@ plugins {
     java
     `java-library`
     `maven-publish`
+    kotlin("jvm") version "1.8.0"
     id("com.gradleup.shadow") version "8.3.3"
     id("xyz.jpenilla.run-paper") version "2.2.4"
 }
@@ -47,13 +48,17 @@ repositories {
     maven {
         url = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
     }
+    maven {
+        name = "papermc"
+        url = uri("https://repo.papermc.io/repository/maven-public/")
+    }
 }
 
 dependencies {
     api("org.bstats:bstats-bukkit:3.0.3")
-    api("de.tr7zw:item-nbt-api:2.13.3-SNAPSHOT")
+    api("de.tr7zw:item-nbt-api:2.15.1")
     api("cn.handyplus.lib.adapter:FoliaLib:1.1.5")
-    compileOnly("org.spigotmc:spigot-api:1.20.5-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.20.6-R0.1-SNAPSHOT")
     compileOnly("io.lumine:Mythic-Dist:5.7.1")
     compileOnly("com.sk89q.worldguard:worldguard-bukkit:7.0.10")
     compileOnly("com.github.TechFortress:GriefPrevention:17.0.0")
@@ -61,12 +66,16 @@ dependencies {
     compileOnly("me.clip:placeholderapi:2.11.6")
     compileOnly ("io.github.fabiozumbi12.RedProtect:RedProtect-Core:8.1.2"){ exclude(group = "*")} // Core is not needed but allow access to all region methods
     compileOnly ("io.github.fabiozumbi12.RedProtect:RedProtect-Spigot:8.1.2"){ exclude(group = "*")}
-    compileOnly(files("./libs/SimpleClaimSystem.jar"))
-    compileOnly(files("./libs/Residence5.1.6.5.jar"))
+    compileOnly(files("./libs/SimpleClaimSystem-1.11.6.1.jar"))
+    compileOnly(files("./libs/Residence5.1.4.3.jar"))
 }
 
+val targetJavaVersion = 21
+
 tasks.withType<JavaCompile>().configureEach {
-    options.release.set(21)
+    if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible) {
+        options.release.set(targetJavaVersion)
+    }
 }
 
 tasks.processResources {
@@ -93,15 +102,6 @@ tasks {
 
         relocate("com.jeff_media.updatechecker", "org.milkteamc.autotreechop.libs.updatechecker")
 
-    }
-
-    java {
-        toolchain.languageVersion.set(JavaLanguageVersion.of(21))
-    }
-
-    compileJava {
-        options.encoding = Charsets.UTF_8.name()
-        options.release.set(21)
     }
 }
 
