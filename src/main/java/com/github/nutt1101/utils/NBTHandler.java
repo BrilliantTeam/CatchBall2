@@ -3,6 +3,7 @@ package com.github.nutt1101.utils;
 import de.tr7zw.changeme.nbtapi.NBTContainer;
 import de.tr7zw.changeme.nbtapi.NBTEntity;
 import org.bukkit.NamespacedKey;
+import org.bukkit.entity.Ageable;
 import org.bukkit.entity.Entity;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
@@ -44,6 +45,13 @@ public class NBTHandler {
                 
                 NBTEntity nbtEntity = new NBTEntity(entity);
                 nbtEntity.mergeCompound(nbtContainer);
+
+                if (entity instanceof Ageable ageableEntity) {
+                    if (!nbtContainer.hasTag("IsBaby") || !nbtContainer.getBoolean("IsBaby"))
+                        ageableEntity.setAdult();
+                    else
+                        ageableEntity.setBaby();
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
