@@ -47,10 +47,17 @@ public class NBTHandler {
                 nbtEntity.mergeCompound(nbtContainer);
 
                 if (entity instanceof Ageable ageableEntity) {
-                    if (!nbtContainer.hasTag("IsBaby") || !nbtContainer.getBoolean("IsBaby"))
-                        ageableEntity.setAdult();
-                    else
-                        ageableEntity.setBaby();
+                    if (nbtContainer.hasTag("Age")) {
+                        ageableEntity.setAge(nbtContainer.getInteger("Age"));
+                    } 
+
+                    if (nbtContainer.hasTag("IsBaby")) {
+                        if (nbtContainer.getBoolean("IsBaby")) {
+                            ageableEntity.setBaby();
+                        } else {
+                            ageableEntity.setAdult();
+                        }
+                    }
                 }
             }
         } catch (Exception e) {
