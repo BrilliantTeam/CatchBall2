@@ -26,6 +26,16 @@ public class CatchBall extends JavaPlugin {
     public static Plugin plugin;
     private ExecutorService executorService;
     private Metrics metrics;
+    private static boolean isFolia;
+
+    static {
+        try {
+            Class.forName("io.papermc.paper.threadedregions.RegionScheduler");
+            isFolia = true;
+        } catch (ClassNotFoundException e) {
+            isFolia = false;
+        }
+    }
 
     private void checkPluginHook(String pluginName) {
         if (this.getServer().getPluginManager().getPlugin(pluginName) != null) {
@@ -40,7 +50,6 @@ public class CatchBall extends JavaPlugin {
         
         ConfigSetting.checkConfig();
 
-        // Initialize metrics with proper shutdown handling
         metrics = new Metrics(this, 12380);
         
         registerEvent();
@@ -55,11 +64,14 @@ public class CatchBall extends JavaPlugin {
         checkPluginHook("SimpleClaimSystem");
 
         HandySchedulerUtil.init(this);
+        
+        if (isFolia) {
+            getLogger().info("Detected Folia environment. Global Scheduler tasks will be handled accordingly.");
+        }
     }
 
     @Override
     public void onDisable() {
-        // Properly shutdown executor service
         if (executorService != null) {
             executorService.shutdown();
             try {
@@ -72,22 +84,34 @@ public class CatchBall extends JavaPlugin {
             }
         }
 
-        // Shutdown metrics
         if (metrics != null) {
             metrics.shutdown();
         }
 
-        // Cancel all tasks registered by this plugin
-        getServer().getScheduler().cancelTasks(this);
+        if (isFolia) {
+            try {
+                getServer().getGlobalRegionScheduler().cancelTasks(this);
+                getServer().getAsyncScheduler().cancelTasks(this);
+                getLogger().info("Folia schedulers (Global & Async) tasks cancelled.");
+            } catch (NoSuchMethodError | NoClassDefFoundError e) {
+                getLogger().warning("Folia detected but failed to access new Scheduler API.");
+            }
+        } else {
+            try {
+                getServer().getScheduler().cancelTasks(this);
+            } catch (Exception e) {
+                getLogger().warning("Failed to cancel Bukkit Scheduler tasks.");
+            }
+        }
     }
 
     public void registerEvent() {
-        PluginManager registerEvent = this.getServer().getPluginManager();
-        registerEvent.registerEvents(new HitEvent(), this);
-        registerEvent.registerEvents(new DropGoldEgg(), this);
-        registerEvent.registerEvents(new SkullClick(), this);
-        registerEvent.registerEvents(new GUIClick(), this);
-        registerEvent.registerEvents(new ThrowBallEvent(), this);
+        PluginManager pm = this.getServer().getPluginManager();
+        pm.registerEvents(new HitEvent(), this);
+        pm.registerEvents(new DropGoldEgg(), this);
+        pm.registerEvents(new SkullClick(), this);
+        pm.registerEvents(new GUIClick(), this);
+        pm.registerEvents(new ThrowBallEvent(), this);
     }
 
     public void registerCommand() {
@@ -102,10 +126,13 @@ public class CatchBall extends JavaPlugin {
         return plugin.getServer().getBukkitVersion();
     }
 
-    // Method to safely execute async tasks
     public void executeAsync(Runnable task) {
-        if (!executorService.isShutdown()) {
+        if (executorService != null && !executorService.isShutdown()) {
             executorService.execute(task);
         }
+    }
+    
+    public static boolean isFolia() {
+        return isFolia;
     }
 }
