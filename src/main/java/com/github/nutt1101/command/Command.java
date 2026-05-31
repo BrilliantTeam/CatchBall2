@@ -7,6 +7,7 @@ import com.github.nutt1101.ConfigSetting;
 import com.github.nutt1101.GUI.CatchableList;
 import com.github.nutt1101.items.Ball;
 import com.github.nutt1101.items.GoldEgg;
+import com.github.nutt1101.utils.Drop2InventoryHook;
 import com.github.nutt1101.utils.TranslationFileReader;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandExecutor;
@@ -181,6 +182,7 @@ public class Command implements CommandExecutor {
     private void givePlayerItem(Player player, ItemStack itemStack, int amount) {
         if (player.getInventory().firstEmpty() == -1) {
             player.sendMessage(ConfigSetting.toChat(TranslationFileReader.playerInventoryFull, "", ""));
+            Drop2InventoryHook.registerDrop(player, player.getLocation());
             player.getWorld().dropItem(player.getLocation(), itemStack);
         } else {
             ItemStack item = itemStack.clone();

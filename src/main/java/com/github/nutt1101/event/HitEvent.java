@@ -7,6 +7,7 @@ import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
 import com.github.nutt1101.*;
 import com.github.nutt1101.items.Ball;
+import com.github.nutt1101.utils.Drop2InventoryHook;
 import com.github.nutt1101.utils.NBTHandler;
 import com.github.nutt1101.utils.TranslationFileReader;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
@@ -79,8 +80,12 @@ public class HitEvent implements Listener {
                 if (event.getHitEntity() != null) {
                     Entity hitEntity = event.getHitEntity();
                     hitLocation = hitEntity.getLocation();
-                    event.getHitEntity().getWorld().dropItem(event.getHitEntity().getLocation(), Ball.makeBall());
-                } else { event.getHitBlock().getWorld().dropItem(event.getHitBlock().getLocation(), Ball.makeBall()); }
+                    Drop2InventoryHook.registerDrop(player, hitLocation);
+                    event.getHitEntity().getWorld().dropItem(hitLocation, Ball.makeBall());
+                } else {
+                    Drop2InventoryHook.registerDrop(player, event.getHitBlock().getLocation());
+                    event.getHitBlock().getWorld().dropItem(event.getHitBlock().getLocation(), Ball.makeBall());
+                }
 
                 event.setCancelled(true);
 
@@ -94,36 +99,42 @@ public class HitEvent implements Listener {
             if (event.getHitEntity() != null) {
 
                 if (!resCheck(player, event.getHitEntity().getLocation()) && ConfigSetting.UseRes) {
+                    Drop2InventoryHook.registerDrop(player, event.getHitEntity().getLocation());
                     event.getHitEntity().getWorld().dropItem(event.getHitEntity().getLocation(), Ball.makeBall());
                     player.sendMessage(ConfigSetting.toChat(TranslationFileReader.canNotCatchable, getCoordinate(event.getHitEntity().getLocation()), ""));
                     return;
                 }
 
                 if (!mmCheck(player, event.getHitEntity()) && ConfigSetting.UseMM) {
+                    Drop2InventoryHook.registerDrop(player, event.getHitEntity().getLocation());
                     event.getHitEntity().getWorld().dropItem(event.getHitEntity().getLocation(), Ball.makeBall());
                     player.sendMessage(ConfigSetting.toChat(TranslationFileReader.canNotCatchable, getCoordinate(event.getHitEntity().getLocation()), ""));
                     return;
                 }
 
                 if (!gfCheck(player, event.getHitEntity().getLocation()) && ConfigSetting.UseGF) {
+                    Drop2InventoryHook.registerDrop(player, event.getHitEntity().getLocation());
                     event.getHitEntity().getWorld().dropItem(event.getHitEntity().getLocation(), Ball.makeBall());
                     player.sendMessage(ConfigSetting.toChat(TranslationFileReader.canNotCatchable, getCoordinate(event.getHitEntity().getLocation()), ""));
                     return;
                 }
 
                 if (!landsCheck(player, event.getHitEntity().getLocation()) && ConfigSetting.UseLands) {
+                    Drop2InventoryHook.registerDrop(player, event.getHitEntity().getLocation());
                     event.getHitEntity().getWorld().dropItem(event.getHitEntity().getLocation(), Ball.makeBall());
                     player.sendMessage(ConfigSetting.toChat(TranslationFileReader.canNotCatchable, getCoordinate(event.getHitEntity().getLocation()), ""));
                     return;
                 }
 
                 if (!rpCheck(player, event.getHitEntity().getLocation()) && ConfigSetting.UseRP) {
+                    Drop2InventoryHook.registerDrop(player, event.getHitEntity().getLocation());
                     event.getHitEntity().getWorld().dropItem(event.getHitEntity().getLocation(), Ball.makeBall());
                     player.sendMessage(ConfigSetting.toChat(TranslationFileReader.canNotCatchable, getCoordinate(event.getHitEntity().getLocation()), ""));
                     return;
                 }
 
                 if (!scsCheck(player, event.getHitEntity().getLocation()) && ConfigSetting.UseSCS) {
+                    Drop2InventoryHook.registerDrop(player, event.getHitEntity().getLocation());
                     event.getHitEntity().getWorld().dropItem(event.getHitEntity().getLocation(), Ball.makeBall());
                     player.sendMessage(ConfigSetting.toChat(TranslationFileReader.canNotCatchable, getCoordinate(event.getHitEntity().getLocation()), ""));
                     return;
@@ -143,6 +154,7 @@ public class HitEvent implements Listener {
                         boolean isNullOwnerValue = tameable.getOwner() == null;
                         boolean sameOwner = isNullOwnerValue ? true : tameable.getOwner().getName().equals(shooter.getName());
                         if ((isNullOwnerValue && !ConfigSetting.allowCatchableTamedOwnerIsNull) || !sameOwner) {
+                            Drop2InventoryHook.registerDrop(player, event.getHitEntity().getLocation());
                             event.getHitEntity().getWorld().dropItem(event.getHitEntity().getLocation(), Ball.makeBall());
                             player.sendMessage(ConfigSetting.toChat(TranslationFileReader.canNotCatchable, getCoordinate(event.getHitEntity().getLocation()), ""));
                             return;
@@ -161,6 +173,7 @@ public class HitEvent implements Listener {
                 for (EntityType entity : catchableEntity) {
                     if (hitEntity.getType().equals(entity) && !(hitEntity instanceof Player) && !checkCustom.equals("CUSTOM")) {
                         if(Math.random() < ConfigSetting.catchFailRate) {
+                            Drop2InventoryHook.registerDrop(player, hitLocation);
                             hitEntity.getWorld().dropItem(hitLocation, Ball.makeBall());
                             player.sendMessage(ConfigSetting.toChat(TranslationFileReader.catchFail, getCoordinate(hitLocation), entity.toString()));
                             return;
@@ -172,6 +185,7 @@ public class HitEvent implements Listener {
 
                         event.getHitEntity().remove();
 
+                        Drop2InventoryHook.registerDrop(player, hitLocation);
                         hitEntity.getWorld().dropItem(hitLocation, new HeadDrop().getEntityHead(event.getHitEntity(), player));
                         if (ConfigSetting.ShowParticles) {
                             hitEntity.getWorld().spawnParticle(Particle.valueOf(ConfigSetting.CustomParticles), hitLocation, 1);
@@ -184,6 +198,7 @@ public class HitEvent implements Listener {
 
                 // if player hit a can not be catch entity, catchBall will be return
                 player.sendMessage(ConfigSetting.toChat(TranslationFileReader.canNotCatchable, getCoordinate(hitLocation), ""));
+                Drop2InventoryHook.registerDrop(player, hitLocation);
                 hitEntity.getWorld().dropItem(hitLocation, Ball.makeBall());
 
                 // hit block, catchBall will be return
@@ -194,6 +209,7 @@ public class HitEvent implements Listener {
                 hitLocation = event.getHitBlock().getLocation();
                 player.sendMessage(ConfigSetting.toChat(TranslationFileReader.ballHitBlock, getCoordinate(hitLocation), ""));
 
+                Drop2InventoryHook.registerDrop(player, hitLocation);
                 event.getHitBlock().getWorld().dropItem(event.getHitBlock().getLocation(), Ball.makeBall());
                 return;
             }
@@ -331,7 +347,7 @@ public class HitEvent implements Listener {
 
     public boolean scsCheck(Player player, Location location) {
         if (plugin.getServer().getPluginManager().getPlugin("SimpleClaimSystem") == null) { return true; }
-        fr.xyness.SCS.Types.Claim claim = scs.getClaimAtChunk(getChunkFromLocation(location));
+        fr.xyness.SCS.Claim claim = scs.getClaimAtChunk(getChunkFromLocation(location));
         if (claim != null) {
             if (claim.getPermission(player.getName(), null)) {
                 return true;

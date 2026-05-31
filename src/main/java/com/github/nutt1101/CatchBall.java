@@ -20,6 +20,7 @@ import com.github.nutt1101.event.GUIClick;
 import com.github.nutt1101.event.ThrowBallEvent;
 import com.github.nutt1101.command.Command;
 import com.github.nutt1101.command.TabComplete;
+import com.github.nutt1101.utils.Drop2InventoryHook;
 
 public class CatchBall extends JavaPlugin {
     private FileConfiguration config = this.getConfig();
@@ -62,6 +63,7 @@ public class CatchBall extends JavaPlugin {
         checkPluginHook("PlaceholderAPI");
         checkPluginHook("RedProtect");
         checkPluginHook("SimpleClaimSystem");
+        checkPluginHook("Drop2Inventory");
 
         HandySchedulerUtil.init(this);
         
