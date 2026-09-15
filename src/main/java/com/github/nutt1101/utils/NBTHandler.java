@@ -42,6 +42,7 @@ public class NBTHandler {
                 nbtContainer.removeKey("Rotation");
                 nbtContainer.removeKey("FallDistance");
                 nbtContainer.removeKey("OnGround");
+                nbtContainer.removeKey("home_pos");
                 
                 NBTEntity nbtEntity = new NBTEntity(entity);
                 nbtEntity.mergeCompound(nbtContainer);
