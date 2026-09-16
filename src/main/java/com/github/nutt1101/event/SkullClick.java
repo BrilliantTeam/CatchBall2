@@ -11,7 +11,6 @@ import com.github.nutt1101.utils.TranslationFileReader;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -122,9 +121,7 @@ public class SkullClick implements Listener {
                             }
                         }
 
-                        Entity entity = player.getWorld().spawnEntity(clickLocation, entityType);
-
-                        NBTHandler.loadEntityNBT(plugin, entity, data);
+                        NBTHandler.spawnStoredEntity(plugin, data, clickLocation, entityType);
 
                         event.getItem().setAmount(0);
                     } catch (Exception e) {

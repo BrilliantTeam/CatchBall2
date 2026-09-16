@@ -58,7 +58,7 @@ dependencies {
     api("org.bstats:bstats-bukkit:3.0.3")
     api("de.tr7zw:item-nbt-api:2.15.2")
     api("cn.handyplus.lib.adapter:FoliaLib:1.1.5")
-    compileOnly("io.papermc.paper:paper-api:1.20.6-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.21.8-R0.1-SNAPSHOT")
     compileOnly("io.lumine:Mythic-Dist:5.7.1")
     compileOnly("com.sk89q.worldguard:worldguard-bukkit:7.0.10")
     compileOnly("com.github.TechFortress:GriefPrevention:17.0.0")
