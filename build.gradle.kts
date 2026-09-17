@@ -56,7 +56,7 @@ repositories {
 
 dependencies {
     api("org.bstats:bstats-bukkit:3.0.3")
-    api("de.tr7zw:item-nbt-api:2.15.2")
+    api("de.tr7zw:item-nbt-api:2.15.7")
     api("cn.handyplus.lib.adapter:FoliaLib:1.1.5")
     compileOnly("io.papermc.paper:paper-api:1.21.8-R0.1-SNAPSHOT")
     compileOnly("io.lumine:Mythic-Dist:5.7.1")
