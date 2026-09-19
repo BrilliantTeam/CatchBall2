@@ -11,6 +11,7 @@ group = "com.github.nutt1101"
 version = "2.0.1"
 description = "CatchBall"
 java.sourceCompatibility = JavaVersion.VERSION_21
+java.toolchain.languageVersion = JavaLanguageVersion.of(25)
 
 repositories {
     mavenLocal()
@@ -58,7 +59,7 @@ dependencies {
     api("org.bstats:bstats-bukkit:3.0.3")
     api("de.tr7zw:item-nbt-api:2.15.7")
     api("cn.handyplus.lib.adapter:FoliaLib:1.1.5")
-    compileOnly("io.papermc.paper:paper-api:1.21.8-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:26.2.build.48-alpha")
     compileOnly("io.lumine:Mythic-Dist:5.7.1")
     compileOnly("com.sk89q.worldguard:worldguard-bukkit:7.0.10")
     compileOnly("com.github.TechFortress:GriefPrevention:17.0.0")
@@ -71,6 +72,14 @@ dependencies {
 }
 
 val targetJavaVersion = 21
+
+listOf("compileClasspath", "runtimeClasspath").forEach { name ->
+    configurations.named(name) {
+        attributes {
+            attribute(org.gradle.api.attributes.java.TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, 25)
+        }
+    }
+}
 
 tasks.withType<JavaCompile>().configureEach {
     if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible) {
