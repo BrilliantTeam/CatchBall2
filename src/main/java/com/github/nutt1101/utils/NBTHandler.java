@@ -4,6 +4,8 @@ import de.tr7zw.changeme.nbtapi.NBTContainer;
 import de.tr7zw.changeme.nbtapi.NBTEntity;
 import de.tr7zw.changeme.nbtapi.NBTType;
 import io.papermc.paper.entity.EntitySerializationFlag;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import org.bukkit.Bukkit;
@@ -23,6 +25,7 @@ public class NBTHandler {
     private static final String LEGACY_NBT_KEY = "entity";
     private static final String ENTITY_DATA_KEY = "entity_data";
     private static final String ENTITY_TYPE_KEY = "entityType";
+    private static final String[] RELEASE_RESET_KEYS = {"Motion", "FallDistance", "fall_distance"};
 
     public static ItemMeta saveEntityNBT(Plugin plugin, Entity hitEntity, ItemMeta headMeta) {
         PersistentDataContainer data = headMeta.getPersistentDataContainer();
@@ -46,6 +49,8 @@ public class NBTHandler {
         byte[] serialized = data.get(new NamespacedKey(plugin, ENTITY_DATA_KEY), PersistentDataType.BYTE_ARRAY);
 
         if (serialized != null) {
+            serialized = sanitizeSerializedEntity(serialized, entityType);
+
             Entity entity = Bukkit.getUnsafe().deserializeEntity(serialized, location.getWorld(), false, true);
             entity.spawnAt(location, CreatureSpawnEvent.SpawnReason.CUSTOM);
             return entity;
@@ -54,6 +59,36 @@ public class NBTHandler {
         Entity entity = location.getWorld().spawnEntity(location, entityType);
         loadLegacyEntityNBT(plugin, entity, data);
         return entity;
+    }
+
+    private static byte[] sanitizeSerializedEntity(byte[] serialized, EntityType entityType) {
+        try {
+            NBTContainer container = new NBTContainer(new ByteArrayInputStream(serialized));
+            boolean changed = false;
+
+            for (String key : RELEASE_RESET_KEYS) {
+                if (container.hasTag(key)) {
+                    container.removeKey(key);
+                    changed = true;
+                }
+            }
+
+            if (entityType == EntityType.CREAKING && container.hasTag("home_pos")) {
+                container.removeKey("home_pos");
+                changed = true;
+            }
+
+            if (!changed) {
+                return serialized;
+            }
+
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            container.writeCompound(out);
+            return out.toByteArray();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return serialized;
+        }
     }
 
     private static void loadLegacyEntityNBT(Plugin plugin, Entity entity, PersistentDataContainer data) {
