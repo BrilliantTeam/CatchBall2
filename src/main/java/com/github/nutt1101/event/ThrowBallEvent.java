@@ -17,18 +17,25 @@ import org.bukkit.inventory.ItemStack;
 import java.util.Set;
 
 public class ThrowBallEvent implements Listener {
-    private static final Set<EntityType> INTERACTABLE_ENTITIES = Set.of(
-        EntityType.VILLAGER,
-        EntityType.WOLF,
-        EntityType.CAT,
-        EntityType.HORSE,
-        EntityType.DONKEY,
-        EntityType.MULE,
-        EntityType.LLAMA,
-        EntityType.TRADER_LLAMA,
-        EntityType.PARROT,
-        EntityType.WANDERING_TRADER,
-        EntityType.CAMEL
+    private static final Set<String> INTERACTABLE_ENTITIES = Set.of(
+        "VILLAGER",
+        "WOLF",
+        "CAT",
+        "HORSE",
+        "DONKEY",
+        "MULE",
+        "SKELETON_HORSE",
+        "ZOMBIE_HORSE",
+        "LLAMA",
+        "TRADER_LLAMA",
+        "PARROT",
+        "WANDERING_TRADER",
+        "ALLAY",
+        "CAMEL",
+        "CAMEL_HUSK",
+        "NAUTILUS",
+        "ZOMBIE_NAUTILUS",
+        "HAPPY_GHAST"
     );
 
     private boolean handleBallThrow(Player player, ItemStack item, EntityType entityType) {
@@ -44,7 +51,7 @@ public class ThrowBallEvent implements Listener {
             return false;
         }
 
-        if (INTERACTABLE_ENTITIES.contains(entityType)) {
+        if (INTERACTABLE_ENTITIES.contains(entityType.name())) {
             Snowball snowball = player.launchProjectile(Snowball.class);
             snowball.setItem(Ball.makeBall());
             item.setAmount(item.getAmount() - 1);
