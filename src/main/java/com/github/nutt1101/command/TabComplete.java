@@ -39,7 +39,7 @@ public class TabComplete implements TabCompleter {
                     sort.sort(String.CASE_INSENSITIVE_ORDER);
                     return sort;
                 } else if (args[0].equalsIgnoreCase("add")) {
-                    Set<String> allEntityList = ConfigSetting.entityFile.getConfigurationSection("EntityList").getKeys(false);
+                    Set<String> allEntityList = ConfigSetting.getEntityList();
 
                     allEntityList.stream().
                             filter(entityName -> !ConfigSetting.catchableEntity.contains(EntityType.valueOf(entityName))).
@@ -52,7 +52,7 @@ public class TabComplete implements TabCompleter {
 
                 } else if (args[0].equalsIgnoreCase("remove")) {
 
-                    ConfigSetting.entityFile.getConfigurationSection("EntityList").getKeys(false).stream().
+                    ConfigSetting.getEntityList().stream().
                         filter(entityName -> ConfigSetting.catchableEntity.contains(EntityType.valueOf(entityName))).
                         forEach(entity -> entityList.add(entity));
                     

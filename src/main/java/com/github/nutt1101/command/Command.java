@@ -20,7 +20,6 @@ import net.md_5.bungee.api.ChatColor;
 
 public class Command implements CommandExecutor {
     private List<String> commandArgument = CommandCheck.getCommandArgument();
-    private Set<String> entityList = ConfigSetting.entityFile.getConfigurationSection("EntityList").getKeys(false);
 
     @Override
     public boolean onCommand(CommandSender sender, org.bukkit.command.Command command, String label, String[] args) {
@@ -51,9 +50,7 @@ public class Command implements CommandExecutor {
                 }
 
                 if (args[1].equalsIgnoreCase("all")) {
-                    Set<String> entityList = ConfigSetting.entityFile.getConfigurationSection("EntityList")
-                            .getKeys(false);
-                    for (String entity : entityList) {
+                    for (String entity : ConfigSetting.getEntityList()) {
                         if (!ConfigSetting.catchableEntity.contains(EntityType.valueOf(entity))) {
                             ConfigSetting.catchableEntity.add(EntityType.valueOf(entity.toUpperCase()));
                         }
@@ -63,7 +60,7 @@ public class Command implements CommandExecutor {
                     return true;
                 }
 
-                if (!entityList.contains(args[1].toUpperCase())) {
+                if (!ConfigSetting.getEntityList().contains(args[1].toUpperCase())) {
                     sender.sendMessage(ConfigSetting.toChat(TranslationFileReader.unknownEntityType, "", ""));
                     return true;
                 }
@@ -91,7 +88,7 @@ public class Command implements CommandExecutor {
                     return true;
                 }
 
-                if (!entityList.contains(args[1])) {
+                if (!ConfigSetting.getEntityList().contains(args[1].toUpperCase())) {
                     sender.sendMessage(ConfigSetting.toChat(TranslationFileReader.unknownEntityType, "", ""));
                     return true;
                 }

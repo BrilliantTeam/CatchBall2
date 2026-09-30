@@ -32,12 +32,12 @@ public class CatchableList {
 
     public void openCatchableList(Player player, int page) {
         YamlConfiguration entityFile = ConfigSetting.entityFile;
-        Set<String> entityList = entityFile.getConfigurationSection("EntityList").getKeys(false);
+        Set<String> entityList = ConfigSetting.getEntityList();
         Inventory catchableInventory = Bukkit.createInventory(player, 54, ConfigSetting.toChat(TranslationFileReader.catchableListTitle, "", ""));
         head.clear();  // Clear existing items in the head list
 
         for (String entity : entityList) {
-            ItemStack skull = new HeadDrop().skullTextures(new ItemStack(Material.PLAYER_HEAD), entityFile, entity);
+            ItemStack skull = new HeadDrop().skullTextures(new ItemStack(Material.PLAYER_HEAD), entityFile.getString("EntityList." + entity + ".Skull"));
             ItemMeta skullMeta = skull.getItemMeta();
             String catchable = ConfigSetting.catchableEntity.contains(EntityType.valueOf(entity)) ? "&aTRUE" : "&cFALSE";
             skullMeta.setDisplayName(ChatColor.WHITE + entity);

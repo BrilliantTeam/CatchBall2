@@ -2,9 +2,12 @@ package com.github.nutt1101;
 
 import java.io.*;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
@@ -68,6 +71,8 @@ public class ConfigSetting {
         chickenDropGoldEgg = !config.isSet("ChickenDropGoldEgg") || config.getBoolean("ChickenDropGoldEgg");
 
         entityFile = YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder(), "entity.yml"));
+        InputStream defaultEntityFile = plugin.getResource("entity/" + locale + ".yml");
+        if (defaultEntityFile != null) entityFile.setDefaults(YamlConfiguration.loadConfiguration(new InputStreamReader(defaultEntityFile, StandardCharsets.UTF_8)));
 
         chickenDropGoldEggChance = config.isSet("ChickenDropGoldEggChance")
                 ? Integer.parseInt(config.getString("ChickenDropGoldEggChance").replace("%", ""))
@@ -199,6 +204,12 @@ public class ConfigSetting {
         } else {
             plugin.getLogger().log(Level.WARNING, ChatColor.RED + "Unknown Error make plugin file can not place!");
         }
+    }
+
+    public static Set<String> getEntityList() {
+        Set<String> entityList = new LinkedHashSet<>(entityFile.getConfigurationSection("EntityList").getKeys(false));
+        entityList.removeIf(entity -> Arrays.stream(EntityType.values()).noneMatch(type -> type.name().equals(entity)));
+        return entityList;
     }
 
     /**
