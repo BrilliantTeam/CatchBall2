@@ -86,7 +86,7 @@ public final class CodexService {
         String type = entity.getType().name();
         record(player, unlocked, type);
         String variant = HeadDrop.getVariant(entity);
-        if (variant != null && ConfigSetting.entityFile.isConfigurationSection("EntityList." + type + ".Variants." + variant)) {
+        if (variant != null && variants(type).contains(type + ":" + variant)) {
             record(player, unlocked, type + ":" + variant);
         }
     }
@@ -145,12 +145,15 @@ public final class CodexService {
 
     public static List<String> variants(String type) {
         ConfigurationSection section = ConfigSetting.entityFile.getConfigurationSection("EntityList." + type + ".Variants");
-        if (section == null) {
+        List<String> excluded = ConfigSetting.codexExcludedVariants;
+        if (section == null || excluded.contains(type)) {
             return List.of();
         }
         List<String> variants = new ArrayList<>();
         for (String variant : section.getKeys(false)) {
-            variants.add(type + ":" + variant);
+            if (!excluded.contains(type + ":" + variant)) {
+                variants.add(type + ":" + variant);
+            }
         }
         return variants;
     }

@@ -51,6 +51,7 @@ public class ConfigSetting {
     public static boolean codexEnabled;
     public static boolean codexToast;
     public static long codexToastRevokeDelay;
+    public static List<String> codexExcludedVariants = new ArrayList<>();
     public static boolean databaseEnabled;
     public static String databaseUrl;
     public static String databaseUsername;
@@ -187,6 +188,9 @@ public class ConfigSetting {
         codexEnabled = config.getBoolean("Codex.Enabled", true);
         codexToast = config.getBoolean("Codex.Toast.Enabled", true);
         codexToastRevokeDelay = config.getLong("Codex.Toast.RevokeDelayTicks", 2);
+        codexExcludedVariants = config.isSet("Codex.ExcludedVariants")
+                ? config.getStringList("Codex.ExcludedVariants").stream().map(String::toUpperCase).collect(Collectors.toList())
+                : List.of("SHULKER", "RABBIT:THE_KILLER_BUNNY");
         databaseEnabled = config.getBoolean("Database.Enabled", false);
         databaseUrl = "jdbc:mysql://" + config.getString("Database.Host", "localhost")
                 + ":" + config.getInt("Database.Port", 3306)

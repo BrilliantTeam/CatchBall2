@@ -84,6 +84,10 @@ Codex:
         Enabled: true
         # Ticks before the toast advancement is revoked again
         RevokeDelayTicks: 2
+    # Variants hidden from the codex (unobtainable in survival). ENTITY hides all its variants, ENTITY:VARIANT hides one.
+    ExcludedVariants:
+        - SHULKER
+        - RABBIT:THE_KILLER_BUNNY
     # GUI icons, Material + optional CustomModelData (resource pack)
     Icons:
         Locked:
