@@ -181,6 +181,7 @@ public class HitEvent implements Listener {
                         }
 
                         player.sendMessage(ConfigSetting.toChat(TranslationFileReader.catchSuccess, getCoordinate(hitLocation), entity.toString()));
+                        CatchBall.codex.record(player, hitEntity);
                         return;
                     }
                 }

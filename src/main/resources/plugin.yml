@@ -10,6 +10,8 @@ permissions:
     default: op
   catchball.use:
     default: true
+  catchball.command.codex:
+    default: true
 commands:
   ctb:
     description: "Command Help : /ctb"

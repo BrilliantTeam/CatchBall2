@@ -10,7 +10,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
 public class CommandCheck {
-    private static List<String> argmumentList = Arrays.asList("reload", "list", "add", "remove", "give");
+    private static List<String> argmumentList = Arrays.asList("reload", "list", "add", "remove", "give", "codex");
 
     public static Boolean check(CommandSender sender, Command command, String label, String[] args) {
 

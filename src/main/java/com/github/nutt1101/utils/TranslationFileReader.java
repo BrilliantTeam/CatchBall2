@@ -6,7 +6,10 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 import me.clip.placeholderapi.PlaceholderAPI;
 
+import org.bukkit.ChatColor;
+
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -89,8 +92,27 @@ public class TranslationFileReader {
           inputStream.close();
      }
 
+     public static String codex(String key, String... replacements) {
+          return replace(localeYamlConfig.getString("Codex." + key, ""), replacements);
+     }
+
+     public static List<String> codexList(String key, String... replacements) {
+          List<String> lines = new ArrayList<>();
+          localeYamlConfig.getStringList("Codex." + key).forEach(line -> lines.add(replace(line, replacements)));
+          return lines;
+     }
+
+     private static String replace(String value, String... replacements) {
+          for (int i = 0; i + 1 < replacements.length; i += 2) {
+               value = value.replace("{" + replacements[i] + "}", replacements[i + 1]);
+          }
+          return ChatColor.translateAlternateColorCodes('&', value);
+     }
+
      public static void load() {
           localeYamlConfig = YamlConfiguration.loadConfiguration(new File(CatchBall.plugin.getDataFolder(), "locale/" + ConfigSetting.locale + ".yml"));
+          InputStream defaultLocale = CatchBall.plugin.getResource("locale/" + ConfigSetting.locale + ".yml");
+          if (defaultLocale != null) localeYamlConfig.setDefaults(YamlConfiguration.loadConfiguration(new InputStreamReader(defaultLocale, StandardCharsets.UTF_8)));
 
           if (CatchBall.plugin.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI") && ConfigSetting.UsePAPI) {
                consoleExecuteCommand = PlaceholderAPI.setPlaceholders(null, localeYamlConfig.getString("ConsoleExcuteCommand", "&cThis command can only be executed by player!"));

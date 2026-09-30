@@ -76,5 +76,45 @@ UsePAPI: true
 # Disable if you don't want CatchBall check MythicMobs mobs
 UseMM: true
 
+# Capture codex: /ctb codex
+Codex:
+    Enabled: true
+    Toast:
+        # Show an advancement toast when a player unlocks a new codex entry
+        Enabled: true
+        # Ticks before the toast advancement is revoked again
+        RevokeDelayTicks: 2
+    # GUI icons, Material + optional CustomModelData (resource pack)
+    Icons:
+        Locked:
+            Material: STICK
+            CustomModelData: 20007
+        PreviousPage:
+            Material: STICK
+            CustomModelData: 20001
+        NextPage:
+            Material: STICK
+            CustomModelData: 20002
+        Progress:
+            Material: STICK
+            CustomModelData: 21118
+        Tab:
+            Material: STICK
+            CustomModelData: 20003
+        Filler:
+            Material: STICK
+            CustomModelData: 20036
+
+# MySQL storage for the codex. When disabled, codex progress is kept in memory only and lost on logout.
+Database:
+    Enabled: false
+    Host: 127.0.0.1
+    Port: 3306
+    Database: minecraft
+    Username: root
+    Password: ""
+    TablePrefix: "catchball_"
+    Parameters: "?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=UTC&useSSL=false"
+
 CatchableEntity:
     - SHEEP

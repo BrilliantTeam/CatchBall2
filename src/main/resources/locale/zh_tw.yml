@@ -13,7 +13,8 @@ ArgDoesNotExist: "&a指令使用方法:
       \n&b/ctb list - &7列出所有可捕捉實體與捕捉狀態
       \n&b/ctb add [ALL | (實體名稱)] - &7將指定的實體新增至捕捉清單
       \n&b/ctb remove [ALL | (實體名稱)] - &7將指定的實體從捕捉清單移除
-      \n&b/ctb give [玩家名稱] [GoldEgg | CatchBall] [數量] - &7取得特定數量的插件特殊物品"
+      \n&b/ctb give [玩家名稱] [GoldEgg | CatchBall] [數量] - &7取得特定數量的插件特殊物品
+      \n&b/ctb codex - &7開啟捕捉圖鑑"
 
 ArgTooMuch: "&c輸入的指令參數過多。"
 UnknownCommandArgument: "&c未知的指令參數。"
@@ -74,3 +75,30 @@ DropSkullLore:
   - "&e抓捕者: &a{PLAYER}"
   - "&e抓捕時間: &a{TIME}"
   - "&e抓捕地點: &a{LOCATION}"
+
+# /ctb codex 捕捉圖鑑
+Codex:
+  Title: "&0捕捉圖鑑 &8｜ 第 {PAGE}/{PAGES} 頁"
+  TitleVariant: "&0變種圖鑑 &8｜ 第 {PAGE}/{PAGES} 頁"
+  TabVariant: "&d切換到變種圖鑑"
+  TabNormal: "&f切換到捕捉圖鑑"
+  Number: "&8#{NUMBER} "
+  PreviousPage: "&e上一頁"
+  NextPage: "&e下一頁"
+  ProgressName: "&e收集進度"
+  Progress:
+    - "&7已解鎖 &f{UNLOCKED} &7/ &f{TOTAL}"
+    - "&7累計捕捉 &f{CAUGHT} &7隻"
+  StatusLocked: "&c未解鎖"
+  StatusUnlocked: "&a已解鎖"
+  DateFormat: "yyyy/MM/dd HH:mm"
+  UnlockedAt: "&8解鎖於 &7{VALUE}"
+  Caught: "&8已捕捉 &7{VALUE} &8隻"
+  Variants: "&8變種 &d{UNLOCKED} &8/ &7{TOTAL}"
+  Unlocked: "&a圖鑑新解鎖：&f{ENTITY}&a！&7[/ctb codex] 查看圖鑑"
+  ToastDescription: "捕捉圖鑑已解鎖"
+  Loading: "&e圖鑑資料尚未載入完成，請稍候。"
+  Disabled: "&c圖鑑功能未啟用。"
+  AdminUsage: "&a用法：/ctb codex <unlock|clear> <玩家> [all|species|variant]"
+  UnlockedAll: "&a已為 {PLAYER} 解鎖 {COUNT} 項圖鑑。"
+  Cleared: "&c已清除 {PLAYER} 的圖鑑資料。"

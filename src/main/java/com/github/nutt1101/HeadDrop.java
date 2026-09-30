@@ -102,8 +102,11 @@ public class HeadDrop {
     }
 
     public static String getEntityValue(Entity entity, String field) {
-        String path = "EntityList." + entity.getType() + ".";
-        String variant = getVariant(entity);
+        return getEntityValue(entity.getType().name(), getVariant(entity), field);
+    }
+
+    public static String getEntityValue(String type, String variant, String field) {
+        String path = "EntityList." + type + ".";
         String value = variant == null ? null : ConfigSetting.entityFile.getString(path + "Variants." + variant + "." + field);
         return value != null ? value : ConfigSetting.entityFile.getString(path + field);
     }

@@ -48,6 +48,14 @@ public class ConfigSetting {
     public static boolean UseMM;
     public static boolean UseRP;
     public static boolean UseSCS;
+    public static boolean codexEnabled;
+    public static boolean codexToast;
+    public static long codexToastRevokeDelay;
+    public static boolean databaseEnabled;
+    public static String databaseUrl;
+    public static String databaseUsername;
+    public static String databasePassword;
+    public static String databaseTable;
 
     // TODO
     // public static boolean UseWG;
@@ -175,6 +183,18 @@ public class ConfigSetting {
 
         UseSCS = !config.isSet("UseSCS")
                 || config.getBoolean("UseSCS");
+
+        codexEnabled = config.getBoolean("Codex.Enabled", true);
+        codexToast = config.getBoolean("Codex.Toast.Enabled", true);
+        codexToastRevokeDelay = config.getLong("Codex.Toast.RevokeDelayTicks", 2);
+        databaseEnabled = config.getBoolean("Database.Enabled", false);
+        databaseUrl = "jdbc:mysql://" + config.getString("Database.Host", "localhost")
+                + ":" + config.getInt("Database.Port", 3306)
+                + "/" + config.getString("Database.Database", "minecraft")
+                + config.getString("Database.Parameters", "");
+        databaseUsername = config.getString("Database.Username", "root");
+        databasePassword = config.getString("Database.Password", "");
+        databaseTable = config.getString("Database.TablePrefix", "catchball_") + "codex";
 
         /*UseWG = !config.isSet("UseWG")
                 || config.getBoolean("UseWG");

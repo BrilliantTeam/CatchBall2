@@ -18,6 +18,8 @@ import com.github.nutt1101.event.DropGoldEgg;
 import com.github.nutt1101.event.SkullClick;
 import com.github.nutt1101.event.GUIClick;
 import com.github.nutt1101.event.ThrowBallEvent;
+import com.github.nutt1101.event.CodexListener;
+import com.github.nutt1101.codex.CodexService;
 import com.github.nutt1101.command.Command;
 import com.github.nutt1101.command.TabComplete;
 import com.github.nutt1101.utils.Drop2InventoryHook;
@@ -25,6 +27,7 @@ import com.github.nutt1101.utils.Drop2InventoryHook;
 public class CatchBall extends JavaPlugin {
     private FileConfiguration config = this.getConfig();
     public static Plugin plugin;
+    public static CodexService codex;
     private ExecutorService executorService;
     private Metrics metrics;
     private static boolean isFolia;
@@ -50,6 +53,7 @@ public class CatchBall extends JavaPlugin {
         executorService = Executors.newCachedThreadPool();
         
         ConfigSetting.checkConfig();
+        codex = new CodexService(this);
 
         metrics = new Metrics(this, 12380);
         
@@ -74,6 +78,10 @@ public class CatchBall extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        if (codex != null) {
+            codex.close();
+        }
+
         if (executorService != null) {
             executorService.shutdown();
             try {
@@ -114,6 +122,7 @@ public class CatchBall extends JavaPlugin {
         pm.registerEvents(new SkullClick(), this);
         pm.registerEvents(new GUIClick(), this);
         pm.registerEvents(new ThrowBallEvent(), this);
+        pm.registerEvents(new CodexListener(), this);
     }
 
     public void registerCommand() {

@@ -1,9 +1,14 @@
 package com.github.nutt1101.command;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
+import com.github.nutt1101.CatchBall;
 import com.github.nutt1101.ConfigSetting;
+import com.github.nutt1101.codex.CodexService;
+import org.bukkit.OfflinePlayer;
 import com.github.nutt1101.GUI.CatchableList;
 import com.github.nutt1101.items.Ball;
 import com.github.nutt1101.items.GoldEgg;
@@ -19,6 +24,7 @@ import org.bukkit.inventory.ItemStack;
 import net.md_5.bungee.api.ChatColor;
 
 public class Command implements CommandExecutor {
+    public static final List<String> CODEX_MODES = List.of("all", "species", "variant");
     private List<String> commandArgument = CommandCheck.getCommandArgument();
 
     @Override
@@ -33,6 +39,7 @@ public class Command implements CommandExecutor {
             player will get a catchBall*/
             if (args[0].equalsIgnoreCase("reload")) {
                 ConfigSetting.checkConfig();
+                CatchBall.codex.reload();
                 sender.sendMessage(ConfigSetting.toChat(TranslationFileReader.reloadSuccess, "", ""));
                 return true;
 
@@ -146,6 +153,10 @@ public class Command implements CommandExecutor {
 
                 return true;
 
+            } else if (args[0].equalsIgnoreCase("codex")) {
+                codex(sender, args);
+                return true;
+
             } else if (!commandArgument.contains(args[0])) {
 
                 // player entered an unknown argument
@@ -155,6 +166,57 @@ public class Command implements CommandExecutor {
         }
 
         return true;
+    }
+
+    private void codex(CommandSender sender, String[] args) {
+        if (!ConfigSetting.codexEnabled) {
+            sender.sendMessage(TranslationFileReader.codex("Disabled"));
+            return;
+        }
+        if (args.length == 1) {
+            if (!checkSenderPlayer(sender)) {
+                return;
+            }
+            Player player = (Player) sender;
+            if (!CatchBall.codex.isLoaded(player.getUniqueId())) {
+                sender.sendMessage(TranslationFileReader.codex("Loading"));
+                return;
+            }
+            CatchBall.codex.open(player, 0, false);
+            return;
+        }
+        if (!sender.hasPermission("catchball.op")) {
+            sender.sendMessage(ConfigSetting.toChat(TranslationFileReader.noPermission, "", ""));
+            return;
+        }
+        String action = args[1].toLowerCase(Locale.ROOT);
+        String mode = args.length > 3 ? args[3].toLowerCase(Locale.ROOT) : "all";
+        if (args.length < 3 || !List.of("unlock", "clear").contains(action) || !CODEX_MODES.contains(mode)) {
+            sender.sendMessage(TranslationFileReader.codex("AdminUsage"));
+            return;
+        }
+        Player online = Bukkit.getPlayerExact(args[2]);
+        OfflinePlayer target = online != null ? online : Bukkit.getOfflinePlayerIfCached(args[2]);
+        if (target == null) {
+            sender.sendMessage(ConfigSetting.toChat(TranslationFileReader.unknownOrOfflinePlayer, "", "")
+                    .replace("{PLAYER}", args[2]));
+            return;
+        }
+        if (action.equals("clear")) {
+            CatchBall.codex.clear(target.getUniqueId());
+            sender.sendMessage(TranslationFileReader.codex("Cleared", "PLAYER", args[2]));
+            return;
+        }
+        List<String> entries = new ArrayList<>();
+        if (!mode.equals("variant")) {
+            entries.addAll(CodexService.species());
+        }
+        if (!mode.equals("species")) {
+            entries.addAll(CodexService.variants());
+        }
+        CatchBall.codex.unlockAll(target.getUniqueId(), entries);
+        sender.sendMessage(TranslationFileReader.codex("UnlockedAll",
+                "PLAYER", args[2], "COUNT", String.valueOf(entries.size())));
     }
 
     private ItemStack checkItem(String item) {

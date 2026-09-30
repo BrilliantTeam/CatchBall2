@@ -23,7 +23,12 @@ public class TabComplete implements TabCompleter {
         if (command.getName().equals("ctb")) {
             final List<String> sort = new ArrayList<>();
             
-            if (!sender.hasPermission("catchball.op")) { return List.of(""); }
+            if (!sender.hasPermission("catchball.op")) {
+                if (args.length == 1 && sender.hasPermission("catchball.command.codex")) {
+                    return StringUtil.copyPartialMatches(args[0], List.of("codex"), sort);
+                }
+                return List.of("");
+            }
             
             if (args.length == 1) { 
                 StringUtil.copyPartialMatches(args[0], CommandCheck.getCommandArgument(), sort);
@@ -32,6 +37,9 @@ public class TabComplete implements TabCompleter {
 
             if (args.length == 2) { 
                 entityList.clear();
+                if (args[0].equalsIgnoreCase("codex")) {
+                    return StringUtil.copyPartialMatches(args[1], List.of("unlock", "clear"), sort);
+                }
                 if (args[0].equalsIgnoreCase("give")) {
                     List<String> playerNames = new ArrayList<>();
                     Bukkit.getOnlinePlayers().forEach(player -> playerNames.add(player.getName()));
@@ -62,11 +70,19 @@ public class TabComplete implements TabCompleter {
                     return sort;
                 }
             } else if (args.length == 3) {
+                if (args[0].equalsIgnoreCase("codex")) {
+                    List<String> playerNames = new ArrayList<>();
+                    Bukkit.getOnlinePlayers().forEach(player -> playerNames.add(player.getName()));
+                    return StringUtil.copyPartialMatches(args[2], playerNames, sort);
+                }
                 if (args[0].equalsIgnoreCase("give")) {
                     StringUtil.copyPartialMatches(args[2], Arrays.asList("CatchBall", "GoldEgg"), sort);
                     return sort;
                 }
             } else if (args.length == 4) {
+                if (args[0].equalsIgnoreCase("codex") && args[1].equalsIgnoreCase("unlock")) {
+                    return StringUtil.copyPartialMatches(args[3], com.github.nutt1101.command.Command.CODEX_MODES, sort);
+                }
                 if (args[0].equalsIgnoreCase("give")) {
                     StringUtil.copyPartialMatches(args[3], Arrays.asList(
                             "1", "2", "3", "4", "5", "6", "7", "8", "9"

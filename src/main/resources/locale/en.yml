@@ -13,7 +13,8 @@ ArgDoesNotExist: "&aCommands Usage:
         \n&b/ctb list &7Lists all catchable entities and states.
         \n&b/ctb add [ALL | (entity_name)] &7Add the entity to the catch list.
         \n&b/ctb remove [ALL | (entity_name)] &7Remove the entity from the catchable list.
-        \n&b/ctb give [player] [GoldEgg | CatchBall] [Amount] &7Give special items of plugins to player"
+        \n&b/ctb give [player] [GoldEgg | CatchBall] [Amount] &7Give special items of plugins to player
+        \n&b/ctb codex &7Open the capture codex"
 
 ArgTooMuch: "&cToo many Argument!"
 UnknownCommandArgument: "&cUnknown Argument!"
@@ -71,3 +72,30 @@ DropSkullLore:
   - "&eThe Catcher: &a{PLAYER}"
   - "&eCapture Time: &a{TIME}"
   - "&eCapture Location: &a{LOCATION}"
+
+# /ctb codex
+Codex:
+  Title: "&0Capture Codex &8| Page {PAGE}/{PAGES}"
+  TitleVariant: "&0Variant Codex &8| Page {PAGE}/{PAGES}"
+  TabVariant: "&dSwitch to variant codex"
+  TabNormal: "&fSwitch to capture codex"
+  Number: "&8#{NUMBER} "
+  PreviousPage: "&ePrevious Page"
+  NextPage: "&eNext Page"
+  ProgressName: "&eProgress"
+  Progress:
+    - "&7Unlocked &f{UNLOCKED} &7/ &f{TOTAL}"
+    - "&7Total caught &f{CAUGHT}"
+  StatusLocked: "&cLocked"
+  StatusUnlocked: "&aUnlocked"
+  DateFormat: "yyyy/MM/dd HH:mm"
+  UnlockedAt: "&8Unlocked at &7{VALUE}"
+  Caught: "&8Caught &7{VALUE}"
+  Variants: "&8Variants &d{UNLOCKED} &8/ &7{TOTAL}"
+  Unlocked: "&aNew codex entry: &f{ENTITY}&a! &7[/ctb codex] to view"
+  ToastDescription: "Codex entry unlocked"
+  Loading: "&eYour codex is still loading, please wait."
+  Disabled: "&cThe codex is disabled."
+  AdminUsage: "&aUsage: /ctb codex <unlock|clear> <player> [all|species|variant]"
+  UnlockedAll: "&aUnlocked {COUNT} codex entries for {PLAYER}."
+  Cleared: "&cCleared the codex of {PLAYER}."
