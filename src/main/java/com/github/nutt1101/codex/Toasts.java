@@ -102,6 +102,7 @@ public final class Toasts {
         display.addProperty("show_toast", true);
         display.addProperty("announce_to_chat", false);
         display.addProperty("hidden", true);
+        display.addProperty("background", "minecraft:gui/advancements/backgrounds/stone");
 
         JsonObject trigger = new JsonObject();
         trigger.addProperty("trigger", "minecraft:impossible");
