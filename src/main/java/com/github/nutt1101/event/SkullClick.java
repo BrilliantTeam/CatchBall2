@@ -1,7 +1,5 @@
 package com.github.nutt1101.event;
 
-import cn.handyplus.lib.adapter.HandySchedulerUtil;
-import cn.handyplus.lib.adapter.PlayerSchedulerUtil;
 import com.bekvon.bukkit.residence.api.ResidenceApi;
 import com.bekvon.bukkit.residence.containers.Flags;
 import com.bekvon.bukkit.residence.protection.ClaimedResidence;
@@ -56,11 +54,6 @@ public class SkullClick implements Listener {
                 Location location = event.getClickedBlock().getLocation();
 
                 if (!new HitEvent().resCheck(player, location)) {
-                    event.setCancelled(true);
-                    return;
-                }
-
-                if (!new HitEvent().gfCheck(player, location)) {
                     event.setCancelled(true);
                     return;
                 }

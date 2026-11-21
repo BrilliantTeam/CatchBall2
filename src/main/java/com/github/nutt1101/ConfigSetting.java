@@ -22,8 +22,6 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.EntityType;
 import org.bukkit.plugin.Plugin;
 
-import me.ryanhamshire.GriefPrevention.ClaimPermission;
-
 public class ConfigSetting {
     private final static Plugin plugin = CatchBall.plugin;
     public static String locale;
@@ -36,18 +34,12 @@ public class ConfigSetting {
 
     public static List<String> residenceFlag = new ArrayList<>();
 
-    public static List<String> griefPreventionFlag = new ArrayList<>();
     public static boolean allowCatchableTamedOwnerIsNull;
     public static boolean ShowParticles;
     public static String CustomParticles;
     public static double catchFailRate;
     public static boolean UseRes;
-    public static boolean UseGF;
-    public static boolean UseLands;
     public static boolean UsePAPI;
-    public static boolean UseMM;
-    public static boolean UseRP;
-    public static boolean UseSCS;
     public static boolean codexEnabled;
     public static boolean codexToast;
     public static long codexToastRevokeDelay;
@@ -57,9 +49,6 @@ public class ConfigSetting {
     public static String databaseUsername;
     public static String databasePassword;
     public static String databaseTable;
-
-    // TODO
-    // public static boolean UseWG;
 
     /**
      * Initialize or reload the plugin
@@ -95,8 +84,6 @@ public class ConfigSetting {
         residenceFlag = config.isSet("ResidenceFlag") ? config.getStringList("ResidenceFlag")
                 : Arrays.asList("animalkilling");
 
-        griefPreventionFlag = config.isSet("GriefPreventionFlag") ? config.getStringList("GriefPreventionFlag")
-                : Arrays.asList("Access");
         allowCatchableTamedOwnerIsNull = !config.isSet("AllowCatchableTamedOwnerIsNull")
                 || config.getBoolean("AllowCatchableTamedOwnerIsNull");
         ShowParticles = !config.isSet("ShowParticles")
@@ -136,24 +123,6 @@ public class ConfigSetting {
             residenceFlag.add("animalkilling");
         }
 
-        try {
-            if (plugin.getServer().getPluginManager().getPlugin("GriefPrevention") != null) {
-                griefPreventionFlag = griefPreventionFlag.stream()
-                        .map(flag -> flag.substring(0, 1).toUpperCase() + flag.substring(1))
-                        .map(String::toUpperCase).collect(Collectors.toList());
-                for (int i = 0; i < griefPreventionFlag.size(); i++) {
-                    ClaimPermission.valueOf(griefPreventionFlag.get(i));
-                }
-            }
-
-        } catch (IllegalArgumentException e) {
-            plugin.getLogger().log(Level.WARNING, ChatColor.RED + e.getMessage());
-            plugin.getLogger().log(Level.WARNING, ChatColor.RED + "Unknown GriefPrevention flag!");
-            plugin.getLogger().log(Level.WARNING, ChatColor.RED + "Please check your config setting!");
-            griefPreventionFlag.clear();
-            griefPreventionFlag.add("Access");
-        }
-
         for (String entity : config.getStringList("CatchableEntity")) {
             try {
                 EntityType.valueOf(entity.toUpperCase());// entityType only can receive UpperCase words
@@ -167,23 +136,8 @@ public class ConfigSetting {
         UseRes = !config.isSet("UseRes")
                 || config.getBoolean("UseRes");
 
-        UseGF = !config.isSet("UseGF")
-                || config.getBoolean("UseGF");
-
-        UseLands = !config.isSet("UseLands")
-                || config.getBoolean("UseLands");
-
         UsePAPI = !config.isSet("UsePAPI")
                 || config.getBoolean("UsePAPI");
-
-        UseMM = !config.isSet("UseMM")
-                || config.getBoolean("UseMM");
-
-        UseRP = !config.isSet("UseRP")
-                || config.getBoolean("UseRP");
-
-        UseSCS = !config.isSet("UseSCS")
-                || config.getBoolean("UseSCS");
 
         codexEnabled = config.getBoolean("Codex.Enabled", true);
         codexToast = config.getBoolean("Codex.Toast.Enabled", true);
@@ -199,12 +153,6 @@ public class ConfigSetting {
         databaseUsername = config.getString("Database.Username", "root");
         databasePassword = config.getString("Database.Password", "");
         databaseTable = config.getString("Database.TablePrefix", "catchball_") + "codex";
-
-        /*UseWG = !config.isSet("UseWG")
-                || config.getBoolean("UseWG");
-
-                // TODO
-         */
     }
 
     /**

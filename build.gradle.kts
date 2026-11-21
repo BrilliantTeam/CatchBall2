@@ -1,90 +1,45 @@
 plugins {
     java
-    `java-library`
-    `maven-publish`
-    kotlin("jvm") version "1.8.0"
     id("com.gradleup.shadow") version "8.3.3"
-    id("xyz.jpenilla.run-paper") version "2.2.4"
 }
 
 group = "com.github.nutt1101"
 version = "2.0.1"
 description = "CatchBall"
-java.sourceCompatibility = JavaVersion.VERSION_21
 java.toolchain.languageVersion = JavaLanguageVersion.of(25)
 
 repositories {
     mavenLocal()
     maven {
-        url = uri("https://repo.destroystokyo.com/repository/maven-public/")
-    }
-
-    maven {
-        url = uri("https://maven.enginehub.org/repo/")
-    }
-
-    maven {
-        url = uri("https://mvn.lumine.io/repository/maven-public/")
-    }
-
-    maven {
-        url = uri("https://jitpack.io")
-    }
-
-    maven {
-        url = uri("https://raw.githubusercontent.com/FabioZumbi12/RedProtect/mvn-repo/")
-    }
-
-    maven {
         url = uri("https://repo.extendedclip.com/content/repositories/placeholderapi/")
     }
-
     maven {
         url = uri("https://repo.codemc.io/repository/maven-public/")
     }
-
     maven {
-        url = uri("https://repo.maven.apache.org/maven2/")
-    }
-    maven {
-        url = uri("https://s01.oss.sonatype.org/content/repositories/snapshots/")
-    }
-    maven {
-        name = "papermc"
         url = uri("https://repo.papermc.io/repository/maven-public/")
     }
+    mavenCentral()
 }
 
 dependencies {
-    api("org.bstats:bstats-bukkit:3.0.3")
-    api("de.tr7zw:item-nbt-api:2.15.7")
-    api("cn.handyplus.lib.adapter:FoliaLib:1.1.5")
-    compileOnly("io.papermc.paper:paper-api:26.2.build.48-alpha")
-    compileOnly("io.lumine:Mythic-Dist:5.7.1")
-    compileOnly("com.sk89q.worldguard:worldguard-bukkit:7.0.10")
-    compileOnly("com.github.TechFortress:GriefPrevention:17.0.0")
-    compileOnly("com.github.angeschossen:LandsAPI:7.8.5")
+    implementation("de.tr7zw:item-nbt-api:2.15.7")
+    compileOnly("io.papermc.paper:paper-api:26.3.build.249-stable")
     compileOnly("me.clip:placeholderapi:2.11.6")
-    compileOnly ("io.github.fabiozumbi12.RedProtect:RedProtect-Core:8.1.2"){ exclude(group = "*")} // Core is not needed but allow access to all region methods
-    compileOnly ("io.github.fabiozumbi12.RedProtect:RedProtect-Spigot:8.1.2"){ exclude(group = "*")}
-    compileOnly(files("./libs/SimpleClaimSystem-1.11.6.1.jar"))
     compileOnly(files("./libs/Residence5.1.4.3.jar"))
 }
-
-val targetJavaVersion = 21
 
 listOf("compileClasspath", "runtimeClasspath").forEach { name ->
     configurations.named(name) {
         attributes {
-            attribute(org.gradle.api.attributes.java.TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, 25)
+            attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, 25)
         }
     }
 }
 
 tasks.withType<JavaCompile>().configureEach {
-    if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible) {
-        options.release.set(targetJavaVersion)
-    }
+    options.encoding = "UTF-8"
+    options.release.set(21)
 }
 
 tasks.processResources {
@@ -100,26 +55,11 @@ tasks.build {
     dependsOn("shadowJar")
 }
 
-tasks {
-    shadowJar {
-        archiveBaseName.set("CatchBall")
-        archiveFileName.set("CatchBall-${project.version}.jar")
-
-        configurations = listOf(project.configurations.runtimeClasspath.get())
-
-        minimize()
-
-        relocate("com.jeff_media.updatechecker", "org.milkteamc.autotreechop.libs.updatechecker")
-
-    }
+tasks.shadowJar {
+    archiveFileName.set("CatchBall-${project.version}.jar")
+    minimize()
 }
 
 tasks.jar {
     archiveFileName.set("CatchBall-${version}-original.jar")
 }
-
-tasks.runServer {
-    minecraftVersion("1.21.1")
-}
-
-runPaper.folia.registerTask()

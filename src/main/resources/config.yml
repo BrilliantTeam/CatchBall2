@@ -55,26 +55,8 @@ UseRes: true
 ResidenceFlag:
     - animalkilling
 
-# Disable if you don't want CatchBall check GriefPrevention flag
-UseGF: true
-# Catcher must have this permission flag to capture entity (depends on Plugin GriefPrevention)
-GriefPreventionFlag:
-    - Access
-
-# Disable if you don't want CatchBall check Lands flag
-UseLands: true
-
-# Disable if you don't want CatchBall check RedProtect flag
-UseRP: true
-
-# Disable if you don't want CatchBall check SimpleClaimSystem flag
-UseSCS: true
-
 # Disable if you don't want CatchBall to use PlaceholderAPI in messages
 UsePAPI: true
-
-# Disable if you don't want CatchBall check MythicMobs mobs
-UseMM: true
 
 # Capture codex: /ctb codex
 Codex:

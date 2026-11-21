@@ -19,7 +19,6 @@ public class BrilliantDropInHook {
                     .forEach(left -> player.getWorld().dropItem(player.getLocation(), left));
             return;
         }
-        Drop2InventoryHook.registerDrop(player, location);
         location.getWorld().dropItem(location, stack);
     }
 

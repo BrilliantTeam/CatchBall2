@@ -14,16 +14,10 @@ You can download a copy at [Modrinth](https://modrinth.com/plugin/catchball)
 
 ## Support plugins:
 - Residence
-- GriefPrevention
-- Lands
-- RedProtect
-- MythicMobs
 - PlaceholderAPI
+- BrilliantDropIn
 
 ## Language:
 - English(Default)
 - ChineseTW(繁體中文)
 - Custom at `./CatchBall/locale/`
-
-## Bstats:
-![Image](https://bstats.org/signatures/bukkit/CatchBall.svg)
