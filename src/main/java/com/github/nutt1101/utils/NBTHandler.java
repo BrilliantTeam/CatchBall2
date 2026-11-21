@@ -14,6 +14,10 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Ageable;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Phantom;
+import org.bukkit.entity.Turtle;
+import org.bukkit.entity.Vex;
+import org.bukkit.entity.WanderingTrader;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
@@ -49,19 +53,32 @@ public class NBTHandler {
         byte[] serialized = data.get(new NamespacedKey(plugin, ENTITY_DATA_KEY), PersistentDataType.BYTE_ARRAY);
 
         if (serialized != null) {
-            serialized = sanitizeSerializedEntity(serialized, entityType);
+            serialized = sanitizeSerializedEntity(serialized, entityType, location);
 
             Entity entity = Bukkit.getUnsafe().deserializeEntity(serialized, location.getWorld(), false, true);
             entity.spawnAt(location, CreatureSpawnEvent.SpawnReason.CUSTOM);
+            rehome(entity, location);
             return entity;
         }
 
         Entity entity = location.getWorld().spawnEntity(location, entityType);
         loadLegacyEntityNBT(plugin, entity, data);
+        rehome(entity, location);
         return entity;
     }
 
-    private static byte[] sanitizeSerializedEntity(byte[] serialized, EntityType entityType) {
+    private static void rehome(Entity entity, Location location) {
+        Location home = location.toBlockLocation();
+        switch (entity) {
+            case Turtle turtle -> turtle.setHome(home);
+            case Vex vex -> vex.setBound(home);
+            case Phantom phantom -> phantom.setAnchorLocation(home.clone().add(0, 5, 0));
+            case WanderingTrader trader -> trader.setWanderingTowards(home);
+            default -> {}
+        }
+    }
+
+    private static byte[] sanitizeSerializedEntity(byte[] serialized, EntityType entityType, Location location) {
         try {
             NBTContainer container = new NBTContainer(new ByteArrayInputStream(serialized));
             boolean changed = false;
@@ -75,6 +92,11 @@ public class NBTHandler {
 
             if (entityType == EntityType.CREAKING && container.hasTag("home_pos")) {
                 container.removeKey("home_pos");
+                changed = true;
+            }
+
+            if (container.hasTag("home_radius")) {
+                container.setIntArray("home_pos", new int[]{location.getBlockX(), location.getBlockY(), location.getBlockZ()});
                 changed = true;
             }
 
