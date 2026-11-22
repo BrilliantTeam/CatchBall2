@@ -15,6 +15,8 @@ import org.bukkit.entity.Ageable;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Phantom;
+import org.bukkit.entity.PiglinBrute;
+import org.bukkit.entity.memory.MemoryKey;
 import org.bukkit.entity.Turtle;
 import org.bukkit.entity.Vex;
 import org.bukkit.entity.WanderingTrader;
@@ -74,6 +76,7 @@ public class NBTHandler {
             case Vex vex -> vex.setBound(home);
             case Phantom phantom -> phantom.setAnchorLocation(home.clone().add(0, 5, 0));
             case WanderingTrader trader -> trader.setWanderingTowards(home);
+            case PiglinBrute brute -> brute.setMemory(MemoryKey.HOME, home);
             default -> {}
         }
     }

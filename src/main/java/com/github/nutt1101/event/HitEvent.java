@@ -13,6 +13,8 @@ import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.ProjectileHitEvent;
+import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.projectiles.BlockProjectileSource;
 
@@ -98,9 +100,7 @@ public class HitEvent implements Listener {
                             player.playSound(player.getLocation(), Sound.valueOf(ConfigSetting.catchSuccessSound), 1f, 1f);
                         }
 
-                        event.getHitEntity().remove();
-
-                        BrilliantDropInHook.drop(player, hitLocation, new HeadDrop().getEntityHead(event.getHitEntity(), player));
+                        BrilliantDropInHook.drop(player, hitLocation, capture(hitEntity, player));
                         if (ConfigSetting.ShowParticles) {
                             hitEntity.getWorld().spawnParticle(Particle.valueOf(ConfigSetting.CustomParticles), hitLocation, 1);
                         }
@@ -143,8 +143,7 @@ public class HitEvent implements Listener {
                 // check if the hitEntity is a catchable entity. on config.yml CatchableEntity
                 for (EntityType entity : catchableEntity) {
                     if (hitEntity.getType().equals(entity) && !(hitEntity instanceof Player) && !checkCustom.equals("CUSTOM")) {
-                        hitEntity.remove();
-                        hitEntity.getWorld().dropItem(hitLocation, new HeadDrop().getEntityHead(event.getHitEntity(), null));
+                        hitEntity.getWorld().dropItem(hitLocation, capture(hitEntity, null));
 
                         return;
                     }
@@ -202,6 +201,15 @@ public class HitEvent implements Listener {
         }
 
         return true;
+    }
+
+    private static ItemStack capture(Entity entity, Player player) {
+        ItemStack head = new HeadDrop().getEntityHead(entity, player);
+        if (!(entity instanceof LivingEntity) && entity instanceof InventoryHolder holder) {
+            holder.getInventory().clear();
+        }
+        entity.remove();
+        return head;
     }
 
     public String getIsCustomEntity(Entity hitEntity) {
